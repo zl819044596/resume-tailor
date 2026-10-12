@@ -17,6 +17,19 @@ import { BRAND, TAGLINE } from '../config';
     </div>
   </section>
 
+  <script is:inline>
+    (() => {
+      const p = new URLSearchParams(location.search);
+      if (p.get('login') === 'success') {
+        if (typeof gtag === 'function') gtag('event', 'login', { method: 'google' });
+        history.replaceState(null, '', location.pathname);
+      } else if (p.get('payment') === 'success') {
+        if (typeof gtag === 'function') gtag('event', 'purchase_return', { method: 'creem' });
+        history.replaceState(null, '', location.pathname);
+      }
+    })();
+  </script>
+
   <section class="wrap">
     <Matcher client:load />
   </section>

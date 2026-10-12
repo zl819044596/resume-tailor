@@ -177,3 +177,11 @@ a:hover { text-decoration: underline; }
 .table th, .table td { text-align: left; padding: 11px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
 .table th { color: var(--muted); font-weight: 600; font-size: .84rem; letter-spacing: .04em; text-transform: uppercase; }
 .table td { color: var(--text); }
+
+/* auth nav (AuthNav.tsx) */
+.auth-chip { display: inline-flex; align-items: center; gap: 10px; margin-left: auto; }
+.auth-credits { font-size: .8rem; font-weight: 700; color: var(--accent, #c07a4b); }
+.auth-email { font-size: .84rem; color: var(--muted); max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.auth-link { font-size: .84rem; color: var(--text); background: none; border: 1px solid var(--line); border-radius: 6px; padding: 5px 12px; cursor: pointer; text-decoration: none; }
+.auth-link:hover { border-color: var(--text); }
+.auth-signin { font-weight: 600; }

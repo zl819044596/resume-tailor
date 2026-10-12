@@ -3,7 +3,7 @@ import { matchResumeToJob } from '../lib/matcher';
 import { API_BASE, BRAND, FREE_REWRITE_LIMIT } from '../config';
 import { track } from '../lib/analytics';
 
-// AI 改写面板:免注册,设备指纹配额(免费 3 次,服务端 D1 记账)。
+// AI 改写面板:配额=登录账号级 3 次免费,匿名设备 3 次;用完扣 credits(付费层)。
 // 隐私边界要诚实:检测器 100% 本地;改写会把简历+JD 发到我们的 API 和 DeepSeek 处理。
 interface RewriteResult {
   rewritten: string;
@@ -11,6 +11,8 @@ interface RewriteResult {
   unmatched: string[];
   used: number;
   limit: number;
+  credits?: number;
+  billed?: string;
 }
 
 function getDeviceToken(): string {
@@ -59,15 +61,21 @@ export default function RewritePanel({ resume, jd }: { resume: string; jd: strin
   const [copied, setCopied] = useState(false);
 
   const limit = FREE_REWRITE_LIMIT;
+  const [loggedIn, setLoggedIn] = useState(false);
   useEffect(() => {
     fetch(`${API_BASE}/api/quota`, {
       method: 'POST',
+      credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ deviceToken: getDeviceToken() }),
     })
       .then((r) => r.json())
-      .then((d) => setRemaining(Math.max(0, (d.limit ?? limit) - (d.used ?? 0))))
+      .then((d) => {
+        setRemaining(Math.max(0, (d.limit ?? limit) - (d.used ?? 0)));
+        setLoggedIn(Boolean(d.loggedIn));
+      })
       .catch(() => setRemaining(null));
+    window.addEventListener('rt:auth', () => window.location.reload());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [result]);
 
@@ -78,14 +86,19 @@ export default function RewritePanel({ resume, jd }: { resume: string; jd: strin
     try {
       const res = await fetch(`${API_BASE}/api/rewrite`, {
         method: 'POST',
+        credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ resume, jd, deviceToken: getDeviceToken() }),
       });
       const data = await res.json();
       if (res.status === 429 || data.error === 'quota_exhausted') {
         setRemaining(0);
-        setError(`You've used all ${data.limit ?? limit} free AI rewrites. The pay-what-you-need tier is coming soon.`);
-        track('quota_exhausted');
+        setError(
+          data.loggedIn
+            ? `You've used all ${data.limit ?? limit} free AI rewrites on this account — credit packs are on the way. Sign in keeps your history tied to you.`
+            : `You've used all ${data.limit ?? limit} free AI rewrites on this device. Sign in (top right) to get 3 more, tied to your account.`,
+        );
+        track('quota_exhausted', { loggedIn: Boolean(data.loggedIn) });
       } else if (!res.ok) {
         setError(`Something went wrong (${data.error ?? res.status}). Please try again.`);
       } else {
