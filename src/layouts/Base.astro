@@ -1,0 +1,62 @@
+---
+import { BRAND, TAGLINE } from '../config';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+  path: string;
+  jsonLd?: object;
+}
+const { title, description, path, jsonLd } = Astro.props;
+const fullTitle = title.includes(BRAND) ? title : `${title} | ${BRAND}`;
+const canon = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canon} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canon} />
+    {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+    <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-17ELR7ST33"></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-17ELR7ST33');
+    </script>
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="wrap nav-shell">
+        <a class="logo" href="/">{BRAND}</a>
+        <div class="nav-links">
+          <a href="/ats-resume-checker">ATS Checker</a>
+          <a href="/tailor-resume-to-job-description">Tailor to a JD</a>
+          <a href="/privacy">Privacy</a>
+        </div>
+      </nav>
+    </header>
+    <main>
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <div class="wrap">
+        <p>{TAGLINE}</p>
+        <p class="foot-links">
+          <a href="/">{BRAND}</a> · <a href="/ats-resume-checker">ATS Resume Checker</a> · <a href="/tailor-resume-to-job-description">Tailor to a job description</a> · <a href="/privacy">Privacy</a>
+        </p>
+        <p class="foot-note">© {new Date().getFullYear()} {BRAND}. Your resume never leaves your browser.</p>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,90 @@
+---
+import Base from '../layouts/Base.astro';
+import Matcher from '../components/Matcher';
+import { BRAND } from '../config';
+
+const faqs = [
+  {
+    q: 'What does it mean to tailor a resume to a job description?',
+    a: `It means adjusting your resume so it speaks the same language as the job posting: mirroring the job title, using the exact keywords and phrases the description uses, and putting your most relevant experience first. Most resumes are rejected by ATS filters before a human reads them — tailoring raises the odds your resume survives that first pass.`,
+  },
+  {
+    q: 'How do I tailor my resume to a job description for free?',
+    a: `Paste your resume and the job description into the tool above. In a few seconds you get a match score and a ranked list of the keywords missing from your resume. Add the missing terms where they truthfully apply — skills, bullets, summary — and re-check until your score is in a strong range. It's free and unlimited, with no sign-up.`,
+  },
+  {
+    q: 'How long should tailoring take?',
+    a: `Most people need 10–15 minutes per application with a matched base resume: retitle your headline, reorder two or three bullets, and work the missing keywords into sentences that are true for you. If it takes longer, you're rewriting — you only need to realign.`,
+  },
+  {
+    q: 'Is it safe to paste my resume here?',
+    a: `Yes. The matcher runs entirely in your browser with JavaScript — your resume and the job description are never uploaded to any server. We physically cannot lose, sell or train on data we never receive.`,
+  },
+  {
+    q: 'Should I copy keywords exactly as written in the job description?',
+    a: `Where they're true for you, yes — many ATS filters match literally, so "EHR charting" and "electronic health records" can score differently. Change the wording of your achievements, not the truth of them. Never add a keyword for software or duties you don't have; interviewers probe every line.`,
+  },
+  {
+    q: 'Can I use ChatGPT to tailor my resume to a job description?',
+    a: `You can — pasting a resume and job description into ChatGPT is the most common DIY approach. The risks: it can invent experience ("hallucinate"), it gives you no match score or keyword gap list, and the output is generic unless your prompt is excellent. ${BRAND} automates the guarded version of that workflow: keyword matching first, then a rewrite that only reuses your real facts and explicitly lists job requirements your resume can't support.`,
+  },
+  {
+    q: 'What is the best AI prompt to tailor a resume?',
+    a: `A good prompt forces honesty: "Rewrite this resume for this job description. Use only facts present in the original resume. Mirror the job description's exact keywords where truthfully applicable. List any job requirements not supported by the resume." That final instruction is the one most people skip — and the one that keeps AI from fabricating. ${BRAND}'s rewrite runs a hardened version of this prompt on every request.`,
+  },
+];
+---
+
+<Base
+  title={`Tailor Resume to Job Description — Free ATS Keyword Tool | ${BRAND}`}
+  description={`Paste your resume and any job description to get a free match score and the exact missing keywords — instantly, with no sign-up. Your resume never leaves your browser.`}
+  path="/tailor-resume-to-job-description"
+  jsonLd={{
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  }}
+>
+  <section class="hero">
+    <div class="wrap">
+      <span class="badge">Free tool · No sign-up · Zero uploads</span>
+      <h1>Tailor your resume to a<br /><em>job description</em> in 10 minutes</h1>
+      <p class="sub">Applicant tracking systems reject most resumes before a human sees them. Paste the job posting below and see — in seconds — exactly which keywords your resume is missing.</p>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <Matcher client:load />
+  </section>
+
+  <section class="prose">
+    <h2>How to tailor a resume to a job description</h2>
+    <p class="lead">Tailoring is realignment, not rewriting. Ten focused minutes per application:</p>
+    <h3>1 · Find the title, use the title</h3>
+    <p>If the posting says "Registered Nurse (RN) — Medical-Surgical", your resume headline should echo it — not "Healthcare Professional". Filters and recruiters both anchor on the title.</p>
+    <h3>2 · Mine the posting for its vocabulary</h3>
+    <p>Requirements listed first and repeated often matter most. The tool above ranks them for you by frequency — a keyword asked for 4× is a bigger gap than one mentioned once.</p>
+    <h3>3 · Close gaps with true statements</h3>
+    <p>For each missing keyword, ask: "Have I done this?" If yes, work the exact phrase into a bullet with a result attached. If no, skip it — a keyword you can't defend is worse than one that's missing.</p>
+    <h3>4 · Re-check until you're in the strong range</h3>
+    <p>Re-run the match after editing. A 75+ score means the resume and the posting now speak the same language. Below 50, you're likely applying to a role that isn't a real fit — spend that application's time elsewhere.</p>
+
+    <h2>FAQ</h2>
+    <div class="faq">
+      {faqs.map((f) => (
+        <details>
+          <summary>{f.q}</summary>
+          <p>{f.a}</p>
+        </details>
+      ))}
+    </div>
+
+    <p style="color: var(--muted); font-size: .9rem; margin-top: 28px;">
+      Related: <a href="/ats-resume-checker">free ATS resume checker</a> · <a href="/privacy">privacy — your resume never leaves your browser</a>
+    </p>
+  </section>
+</Base>

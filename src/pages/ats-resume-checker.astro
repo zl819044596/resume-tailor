@@ -1,0 +1,114 @@
+---
+import Base from '../layouts/Base.astro';
+import Matcher from '../components/Matcher';
+import { BRAND } from '../config';
+
+const faqs = [
+  {
+    q: 'What is an ATS resume checker?',
+    a: `An ATS (Applicant Tracking System) resume checker compares your resume against a job description the way hiring software does: it looks for the keywords, skills and phrases the posting asks for, and shows you what is missing. ${BRAND}'s checker gives you a match score from 0 to 100 plus a ranked list of missing keywords — free, unlimited, with no sign-up.`,
+  },
+  {
+    q: 'Is this ATS resume checker really free?',
+    a: `Yes — unlimited checks, no account, no credit card. The checker runs entirely in your browser, so there are no per-scan costs. This is why we can be free where tools like Jobscan charge $49.95/month and cap the free plan at 5 scans.`,
+  },
+  {
+    q: 'Do you simulate Workday, Greenhouse or Taleo specifically?',
+    a: `No — and be skeptical of tools that claim exact vendor simulation. What we do is what actually matters: keyword and phrase matching against the job description, the same filtering logic ATS software applies before a human ever sees your resume. We also flag formatting pitfalls that break ATS parsing.`,
+  },
+  {
+    q: 'Does the checker upload my resume?',
+    a: `No. The analysis runs 100% in your browser — your resume and the job description never leave your device. The optional AI rewrite is the only feature that sends text anywhere, and it is clearly labeled before you use it.`,
+  },
+  {
+    q: 'How do I pass an ATS resume check?',
+    a: `Four things move the needle: 1) mirror the exact job title in your headline, 2) use the job description's exact keyword wording where it is true for you, 3) keep formatting simple — single column, standard section names, no tables or graphics, 4) quantify achievements with numbers. Run your resume through the checker above after every change.`,
+  },
+  {
+    q: 'What resume format is most ATS-friendly?',
+    a: `A single-column layout with standard section headings (Summary, Experience, Education, Skills), a normal font, and bullets — saved as .docx or a text-based PDF. Avoid tables, text boxes, icons, headers/footers with critical info, and "creative" section names like "My Journey".`,
+  },
+];
+---
+
+<Base
+  title={`ATS Resume Checker — Free, Unlimited & No Sign-Up | ${BRAND}`}
+  description={`Free ATS resume checker: paste your resume and a job description, get an instant match score and missing keywords. Unlimited, no sign-up, and your resume never leaves your browser.`}
+  path="/ats-resume-checker"
+  jsonLd={{
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  }}
+>
+  <section class="hero">
+    <div class="wrap">
+      <span class="badge">Free · Unlimited · No sign-up · Zero uploads</span>
+      <h1>ATS Resume Checker<br /><em>See your resume the way the machine does</em></h1>
+      <p class="sub">Roughly 75% of resumes are filtered out by applicant tracking systems before a human reads them. Paste your resume and the job description — get your match score and the exact missing keywords in seconds.</p>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <Matcher client:load />
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker">How scoring works</span>
+        <h2>What our ATS check looks at</h2>
+      </div>
+      <div class="grid grid-3">
+        <div class="card"><h3>Keyword coverage</h3><p>Every skill and term the job description asks for, weighted by how often it appears. Missing keywords are ranked by importance — fix the top of the list first.</p></div>
+        <div class="card"><h3>Phrase matching</h3><p>Multi-word phrases like "project management" or "discharge planning" are matched the way ATS filters read them — literally. Using the posting's exact wording counts.</p></div>
+        <div class="card"><h3>Job title alignment</h3><p>The checker compares the posting's job title with your resume headline — the first thing both recruiters and filters look at.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section alt">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker">Format pitfalls</span>
+        <h2>The formatting that breaks ATS parsing</h2>
+        <p class="lead">Even a perfectly keyword-matched resume fails if the parser can't read it. Keep it boring, keep it readable:</p>
+      </div>
+      <div class="table-wrap">
+        <table class="table">
+          <tr><th>Breaks ATS parsing</th><th>ATS-safe</th></tr>
+          <tr><td>Tables and text boxes</td><td>Plain single-column layout</td></tr>
+          <tr><td>Icons and images for contact info</td><td>Plain text phone / email / LinkedIn</td></tr>
+          <tr><td>Creative headings ("My Journey")</td><td>Standard names: Experience, Education, Skills</td></tr>
+          <tr><td>Multi-column layouts</td><td>One column, top to bottom</td></tr>
+          <tr><td>Info buried in headers/footers</td><td>Everything in the document body</td></tr>
+          <tr><td>Graphics-only skill charts</td><td>Plain text skill list</td></tr>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker">FAQ</span>
+        <h2>Frequently asked questions</h2>
+      </div>
+      <div class="faq">
+        {faqs.map((f) => (
+          <details>
+            <summary>{f.q}</summary>
+            <p>{f.a}</p>
+          </details>
+        ))}
+      </div>
+      <p style="color: var(--muted); font-size: .9rem; margin-top: 28px;">
+        Related: <a href="/tailor-resume-to-job-description">how to tailor a resume to a job description</a> · <a href="/privacy">privacy — your resume never leaves your browser</a>
+      </p>
+    </div>
+  </section>
+</Base>

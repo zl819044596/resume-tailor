@@ -1,0 +1,48 @@
+---
+import Base from '../layouts/Base.astro';
+import Matcher from '../components/Matcher';
+import { BRAND, TAGLINE } from '../config';
+---
+
+<Base
+  title={`${BRAND} — Tailor Your Resume to Any Job Description, Free`}
+  description="Paste your resume and the job description, get an instant match score and the exact missing keywords. Free, no sign-up, and nothing ever leaves your browser."
+  path="/"
+>
+  <section class="hero">
+    <div class="wrap">
+      <span class="badge">Free · No sign-up · Nothing uploaded</span>
+      <h1>Tailor your resume to the job,<br /><em>before you hit apply</em></h1>
+      <p class="sub">{TAGLINE}. See your match score and the exact keywords the job description wants that your resume is missing.</p>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <Matcher client:load />
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <h2>How it works</h2>
+      <div class="grid-3">
+        <div class="card"><h3>1 · Paste both sides</h3><p>Your resume and the job description you're targeting. Text only — no account, no upload, no waiting.</p></div>
+        <div class="card"><h3>2 · Instant match score</h3><p>The matcher weighs every keyword and phrase by how often the job description asks for it, and scores your coverage 0–100.</p></div>
+        <div class="card"><h3>3 · Close the gaps honestly</h3><p>You get the missing keywords, ranked by value, plus where to put them. Add the ones that are true for you — never fabricate.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <h2>Why it's free, and why it stays private</h2>
+      <p class="sub" style="max-width:760px">
+        The whole matcher runs inside your browser — there is no server to send your resume to, which is why
+        {BRAND} can be free and unlimited where others charge $50/month and cap you at 5 checks.
+        We don't have your resume, so we can't lose it, sell it, or train on it.
+      </p>
+      <p class="sub" style="max-width:760px">
+        More free tools: <a href="/ats-resume-checker">ATS resume checker</a> · <a href="/tailor-resume-to-job-description">how to tailor a resume to a job description</a>
+      </p>
+    </div>
+  </section>
+</Base>

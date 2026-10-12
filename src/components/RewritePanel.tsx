@@ -1,0 +1,177 @@
+import { useEffect, useMemo, useState } from 'react';
+import { matchResumeToJob } from '../lib/matcher';
+import { API_BASE, BRAND, FREE_REWRITE_LIMIT } from '../config';
+import { track } from '../lib/analytics';
+
+// AI 改写面板:免注册,设备指纹配额(免费 3 次,服务端 D1 记账)。
+// 隐私边界要诚实:检测器 100% 本地;改写会把简历+JD 发到我们的 API 和 DeepSeek 处理。
+interface RewriteResult {
+  rewritten: string;
+  changes: { what: string; why: string }[];
+  unmatched: string[];
+  used: number;
+  limit: number;
+}
+
+function getDeviceToken(): string {
+  const KEY = 'rt_device';
+  let t = localStorage.getItem(KEY);
+  if (!t || !/^[0-9a-f-]{8,64}$/i.test(t)) {
+    t = crypto.randomUUID();
+    localStorage.setItem(KEY, t);
+  }
+  return t;
+}
+
+function download(filename: string, content: string | Blob, type = 'text/plain;charset=utf-8') {
+  const blob = content instanceof Blob ? content : new Blob([content], { type });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// 纯文本→简洁 .docx(ATS 友好排版):首行=姓名标题,全大写短行=节标题,- 开头=项目符号
+async function downloadDocx(text: string) {
+  const { Document, Packer, Paragraph, HeadingLevel } = await import('docx');
+  const children = text.split('\n').map((line, i) => {
+    const t = line.trim();
+    if (!t) return new Paragraph('');
+    if (i === 0) return new Paragraph({ text: t, heading: HeadingLevel.HEADING_1 });
+    if (i === 1) return new Paragraph({ text: t, heading: HeadingLevel.HEADING_3 });
+    if (t.startsWith('-') || t.startsWith('•')) {
+      return new Paragraph({ text: t.replace(/^[-•]\s*/, ''), bullet: { level: 0 } });
+    }
+    if (t === t.toUpperCase() && t.length < 50) return new Paragraph({ text: t, heading: HeadingLevel.HEADING_2 });
+    return new Paragraph({ text: t });
+  });
+  const doc = new Document({ sections: [{ children }] });
+  download('tailored-resume.docx', await Packer.toBlob(doc), 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+}
+
+export default function RewritePanel({ resume, jd }: { resume: string; jd: string }) {
+  const [remaining, setRemaining] = useState<number | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [result, setResult] = useState<RewriteResult | null>(null);
+  const [copied, setCopied] = useState(false);
+
+  const limit = FREE_REWRITE_LIMIT;
+  useEffect(() => {
+    fetch(`${API_BASE}/api/quota`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ deviceToken: getDeviceToken() }),
+    })
+      .then((r) => r.json())
+      .then((d) => setRemaining(Math.max(0, (d.limit ?? limit) - (d.used ?? 0))))
+      .catch(() => setRemaining(null));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [result]);
+
+  async function rewrite() {
+    setLoading(true);
+    setError(null);
+    track('rewrite_click');
+    try {
+      const res = await fetch(`${API_BASE}/api/rewrite`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ resume, jd, deviceToken: getDeviceToken() }),
+      });
+      const data = await res.json();
+      if (res.status === 429 || data.error === 'quota_exhausted') {
+        setRemaining(0);
+        setError(`You've used all ${data.limit ?? limit} free AI rewrites. The pay-what-you-need tier is coming soon.`);
+        track('quota_exhausted');
+      } else if (!res.ok) {
+        setError(`Something went wrong (${data.error ?? res.status}). Please try again.`);
+      } else {
+        setResult(data);
+        track('rewrite_success');
+      }
+    } catch {
+      setError('Network error — is the API running?');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function copy() {
+    if (!result) return;
+    await navigator.clipboard.writeText(result.rewritten);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }
+
+  const noneLeft = remaining === 0 && !result;
+  // before/after 分数:改写稿回本地 matcher 重跑(检测+改写同产品的独有闭环)
+  const afterScore = useMemo(
+    () => (result ? matchResumeToJob(result.rewritten, jd).score : null),
+    [result, jd]
+  );
+
+  return (
+    <div className="rewrite">
+      <div className="rewrite-head">
+        <button className="btn btn-primary" onClick={rewrite} disabled={loading || noneLeft}>
+          {loading ? 'Rewriting… (5–20s)' : noneLeft ? 'Free rewrites used up' : `✨ Rewrite my resume for this job${remaining !== null ? ` — ${remaining} free left` : ''}`}
+        </button>
+        <span className="rewrite-note">
+          AI rewrites truthfully: it reuses your facts in the job's wording and flags requirements you can't support. Sends your resume + JD to our API (DeepSeek) — the free matcher above stays 100% local.
+        </span>
+      </div>
+
+      {error && <p className="warn rewrite-error">{error}</p>}
+
+      {result && (
+        <div className="rewrite-result">
+          <div className="ba-score">
+            <span className="ba-num">{matchResumeToJob(resume, jd).score}</span>
+            <span className="ba-arrow">→</span>
+            <span className="ba-num ba-after">{afterScore}</span>
+            <span className="ba-label">match score before → after (re-checked locally, same scoring as the free tool above)</span>
+          </div>
+          <h3>Your tailored resume</h3>
+          <textarea className="rewrite-text" value={result.rewritten} onChange={() => {}} rows={16} readOnly />
+          <div className="tool-actions">
+            <button className="btn btn-primary" onClick={copy}>{copied ? '✓ Copied' : 'Copy text'}</button>
+            <button className="btn btn-ghost" onClick={() => { track('download_resume', { format: 'txt' }); download('tailored-resume.txt', result.rewritten); }}>Download .txt</button>
+            <button className="btn btn-ghost" onClick={() => { track('download_resume', { format: 'docx' }); downloadDocx(result.rewritten); }}>Download .docx</button>
+            <button className="btn btn-ghost" onClick={() => { track('download_resume', { format: 'pdf' }); window.print(); }}>Save as PDF (print)</button>
+          </div>
+          <div id="print-area" className="print-only"><pre>{result.rewritten}</pre></div>
+          <div className="tool-actions">
+            <button className="btn btn-primary" onClick={copy}>{copied ? '✓ Copied' : 'Copy text'}</button>
+            <button className="btn btn-ghost" onClick={() => download('tailored-resume.txt', result.rewritten)}>Download .txt</button>
+            <button className="btn btn-ghost" onClick={() => downloadDocx(result.rewritten)}>Download .docx</button>
+          </div>
+
+          {result.changes.length > 0 && (
+            <>
+              <h3>What changed ({result.changes.length})</h3>
+              <ul className="tips">
+                {result.changes.map((c, i) => (
+                  <li key={i}><b>{c.what}</b>{c.why ? ` — ${c.why}` : ''}</li>
+                ))}
+              </ul>
+            </>
+          )}
+          {result.unmatched.length > 0 && (
+            <>
+              <h3>Job requirements your resume can't support — don't fabricate these</h3>
+              <ul className="tips">
+                {result.unmatched.map((u, i) => <li key={i} className="warn">{u}</li>)}
+              </ul>
+            </>
+          )}
+          <p className="result-foot">
+            {BRAND} rewrites only what your resume supports. Review every line before sending — you own the truth of this document.
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
