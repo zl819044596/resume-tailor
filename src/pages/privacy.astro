@@ -5,7 +5,7 @@ import { BRAND } from '../config';
 
 <Base
   title={`Privacy — Your Resume Never Leaves Your Browser | ${BRAND}`}
-  description={`${BRAND}'s resume-job matching runs 100% in your browser. Your resume and job descriptions are never uploaded, stored, or shared.`}
+  description={`${BRAND}'s keyword matcher runs 100% in your browser — nothing uploaded. The optional AI rewrite processes your text only to produce the rewrite and never stores it.`}
   path="/privacy"
 >
   <section class="prose">
@@ -24,20 +24,38 @@ import { BRAND } from '../config';
       The optional "Rewrite my resume for this job" feature needs a language model, so when you click it
       (it is never automatic), the resume and job description you pasted are sent to our API and processed
       by DeepSeek. We use them only to produce your rewrite and to count your free-rewrite quota
-      (a random device ID plus the request text); we do not build profiles, sell data, or train models on it.
+      (your account ID or a random device ID, plus token counts); we do not build profiles, sell data, or
+      train models on it, and we don't store the document text.
       The free matcher above remains fully local — you never have to use the rewrite feature.
     </p>
 
-    <h2>Accounts</h2>
-    <p>{BRAND} currently has no accounts and asks for no personal information. There is nothing to log in to and nothing to delete.</p>
-
-    <h2>If paid features are added later</h2>
+    <h2>Accounts (optional)</h2>
     <p>
-      Paid tiers will add account-based billing (processed by our payment provider). This page will be
-      updated before that ships, including what is stored, why, and how to delete it.
+      Signing in with Google is optional and unlocks account-based quota and credit packs. When you do, we
+      store your Google email, display name, profile picture URL, and credit balance in our database. Your
+      login session is a random token stored only as a hash — we never keep passwords (Google handles
+      authentication). To delete your account data, email us and it's gone within 7 days.
+    </p>
+
+    <h2>Paid credits</h2>
+    <p>
+      Credit packs are one-time purchases processed by <a href="https://www.creem.io/" rel="noopener">Creem</a>,
+      our Merchant of Record. Your card details go to Creem's secure checkout — we never see them. We store
+      only an order record: what you bought, the amount, its payment status, and a Creem customer reference
+      so refunds reach the right person.
+    </p>
+
+    <h2>What we never store</h2>
+    <p>
+      Your resume and job description text. The rewrite processes them in memory and keeps only a quota
+      ledger — your account ID (or random device ID), the model used, and token counts. Close the tab and
+      the documents themselves are gone.
     </p>
 
     <h2>Contact</h2>
-    <p>Questions about this page: see the footer of our <a href="/">home page</a> for current contact details.</p>
+    <p>
+      Questions about this page or your data:
+      <a href="mailto:support@tailorresume.dev">support@tailorresume.dev</a>.
+    </p>
   </section>
 </Base>

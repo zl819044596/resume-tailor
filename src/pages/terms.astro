@@ -1,0 +1,127 @@
+---
+import Base from '../layouts/Base.astro';
+import { BRAND } from '../config';
+const UPDATED = 'October 12, 2026';
+---
+
+<Base
+  title={`Terms of Service | ${BRAND}`}
+  description={`${BRAND} Terms of Service: the free browser-side resume matcher, the optional paid AI rewrite feature, credit packs, refunds, and acceptable use.`}
+  path="/terms"
+>
+  <section class="prose">
+    <h1>Terms of Service</h1>
+    <p class="lead">Last updated: {UPDATED}</p>
+
+    <h2>1. Who we are</h2>
+    <p>
+      {BRAND} ("we", "the service") is a resume-tailoring web application operated by ZHANG Lei (individual,
+      China). You can reach us at <a href="mailto:support@tailorresume.dev">support@tailorresume.dev</a>.
+      Payments are processed by Creem, our Merchant of Record.
+    </p>
+
+    <h2>2. The service</h2>
+    <p>
+      {BRAND} has two parts. (a) A <b>free keyword matcher</b> that compares a resume with a job description
+      entirely in your browser; the text you paste is never uploaded for this feature. (b) An <b>optional AI
+      rewrite feature</b> that sends the resume and job description you pasted to our API and a third-party
+      language-model provider (DeepSeek) to produce a tailored version. These terms cover both.
+    </p>
+
+    <h2>3. Accounts</h2>
+    <p>
+      You can use the matcher without an account. Signing in with Google is optional and unlocks
+      account-based free quota and credit packs. You are responsible for keeping your Google account secure
+      and for activity that happens under your sign-in.
+    </p>
+
+    <h2>4. Free quota and paid credits</h2>
+    <p>
+      You get 3 free AI rewrites per account (and 3 per anonymous device before signing in). After that, AI
+      rewrites consume <b>credits</b>: 5 credits for $1.99, or 30 credits for $9.00. One credit is consumed
+      per rewrite request. Credits are personal to your account, cannot be transferred, and do not expire.
+      Current prices are always published on our <a href="/pricing">Pricing page</a>.
+    </p>
+
+    <h2>5. Payment</h2>
+    <p>
+      Credit packs are one-time purchases — there is no subscription and no auto-renewal. Checkout and
+      payment are handled by Creem as Merchant of Record; Creem charges your payment method, issues invoices,
+      and handles applicable taxes. We never receive your full card details. Prices may change in the future,
+      but changes never affect credits you have already purchased.
+    </p>
+
+    <h2>6. Refunds</h2>
+    <p>
+      If a purchase did not work as described, contact
+      <a href="mailto:support@tailorresume.dev">support@tailorresume.dev</a> within 14 days of purchase and we
+      will refund credits that remain unused, in full. Credits already consumed are non-refundable, because
+      each rewrite costs us server money the moment it runs. You can also request refunds through Creem.
+    </p>
+
+    <h2>7. Acceptable use</h2>
+    <p>
+      You agree to use the service lawfully and honestly. The full rules are in our
+      <a href="/acceptable-use">Acceptable Use Policy</a>. In short: don't use the AI rewrite to fabricate
+      credentials, don't upload content you have no right to use, don't abuse or automate the service, and
+      don't request content that is illegal, hateful, or sexually explicit.
+    </p>
+
+    <h2>8. AI output — no guarantees</h2>
+    <p>
+      The AI rewrite rephrases the facts <b>you</b> provide and can make mistakes or omissions. We do not
+      guarantee job interviews, hiring outcomes, ATS results, or any specific score improvement. You must
+      review every line before sending a rewritten resume anywhere — you own the truth of your document.
+      Fabricating experience or credentials in a job application is your responsibility, not ours, and is
+      prohibited by our Acceptable Use Policy.
+    </p>
+
+    <h2>9. Your content</h2>
+    <p>
+      You keep all rights to the resume and job description you paste. We process them only to produce your
+      rewrite and to operate quota/billing; we do not sell them or train models on them. See the
+      <a href="/privacy">Privacy page</a> for exactly what is and isn't stored.
+    </p>
+
+    <h2>10. Intellectual property</h2>
+    <p>
+      The {BRAND} website, matcher logic, and branding are owned by the operator and protected by applicable
+      intellectual-property law. You may not copy, mirror, or resell the service without written permission.
+    </p>
+
+    <h2>11. Availability and warranties</h2>
+    <p>
+      The service is provided "as is". We aim for high availability but do not warrant uninterrupted or
+      error-free operation, and we may change or discontinue features. To the maximum extent permitted by
+      law, we disclaim implied warranties of merchantability and fitness for a particular purpose.
+    </p>
+
+    <h2>12. Limitation of liability</h2>
+    <p>
+      To the maximum extent permitted by law, our total liability arising from the service or any purchase is
+      limited to the amount you paid us in the 12 months before the claim (for free users, zero). We are not
+      liable for indirect or consequential damages, including lost job opportunities. Nothing in these terms
+      limits liability that cannot be limited by law.
+    </p>
+
+    <h2>13. Suspension and termination</h2>
+    <p>
+      We may suspend or terminate accounts that violate these terms or the Acceptable Use Policy. If we
+      terminate a paid account without cause, we refund unused credits. You can stop using the service at any
+      time; contact us to delete your account data.
+    </p>
+
+    <h2>14. Changes to these terms</h2>
+    <p>
+      We may update these terms as the service evolves. Material changes will be announced on the site, and
+      the "last updated" date above always reflects the current version. Continuing to use the service after
+      a change means you accept the updated terms.
+    </p>
+
+    <h2>15. Contact</h2>
+    <p>
+      Questions about these terms: <a href="mailto:support@tailorresume.dev">support@tailorresume.dev</a>.
+      These terms don't reduce any mandatory consumer rights you have under the law where you live.
+    </p>
+  </section>
+</Base>

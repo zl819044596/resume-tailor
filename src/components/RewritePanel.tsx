@@ -62,6 +62,9 @@ export default function RewritePanel({ resume, jd }: { resume: string; jd: strin
 
   const limit = FREE_REWRITE_LIMIT;
   const [loggedIn, setLoggedIn] = useState(false);
+  const [packsOpen, setPacksOpen] = useState(false);
+  const [buying, setBuying] = useState<string | null>(null);
+  const [credits, setCredits] = useState(0);
   useEffect(() => {
     fetch(`${API_BASE}/api/quota`, {
       method: 'POST',
@@ -69,15 +72,45 @@ export default function RewritePanel({ resume, jd }: { resume: string; jd: strin
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ deviceToken: getDeviceToken() }),
     })
-      .then((r) => r.json())
+      .then((r) => r.json() as Promise<{ used?: number; limit?: number; loggedIn?: boolean; credits?: number }>)
       .then((d) => {
+        const credits = d.credits ?? 0;
         setRemaining(Math.max(0, (d.limit ?? limit) - (d.used ?? 0)));
+        setCredits(d.credits ?? 0);
         setLoggedIn(Boolean(d.loggedIn));
       })
       .catch(() => setRemaining(null));
     window.addEventListener('rt:auth', () => window.location.reload());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [result]);
+
+  async function buy(product: 'pack5' | 'pack30') {
+    setBuying(product);
+    setError(null);
+    track('checkout_click', { product });
+    try {
+      const res = await fetch(`${API_BASE}/api/checkout`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ product }),
+      });
+      const data = (await res.json()) as { payUrl?: string; error?: string };
+      if (res.ok && data.payUrl) {
+        window.location.href = data.payUrl;
+        return;
+      }
+      setError(
+        data.error === 'payments_not_configured'
+          ? 'Payments are being set up — they will appear here shortly.'
+          : `Checkout failed (${data.error ?? res.status}). Please try again.`,
+      );
+    } catch {
+      setError('Network error — please try again.');
+    } finally {
+      setBuying(null);
+    }
+  }
 
   async function rewrite() {
     setLoading(true);
@@ -93,9 +126,10 @@ export default function RewritePanel({ resume, jd }: { resume: string; jd: strin
       const data = await res.json();
       if (res.status === 429 || data.error === 'quota_exhausted') {
         setRemaining(0);
+        setPacksOpen(Boolean(data.loggedIn));
         setError(
           data.loggedIn
-            ? `You've used all ${data.limit ?? limit} free AI rewrites on this account — credit packs are on the way. Sign in keeps your history tied to you.`
+            ? `You've used all ${data.limit ?? limit} free AI rewrites on this account. Grab a credit pack to keep going — 1 credit = 1 rewrite.`
             : `You've used all ${data.limit ?? limit} free AI rewrites on this device. Sign in (top right) to get 3 more, tied to your account.`,
         );
         track('quota_exhausted', { loggedIn: Boolean(data.loggedIn) });
@@ -119,7 +153,7 @@ export default function RewritePanel({ resume, jd }: { resume: string; jd: strin
     setTimeout(() => setCopied(false), 2000);
   }
 
-  const noneLeft = remaining === 0 && !result;
+  const noneLeft = remaining === 0 && credits === 0 && !result;
   // before/after 分数:改写稿回本地 matcher 重跑(检测+改写同产品的独有闭环)
   const afterScore = useMemo(
     () => (result ? matchResumeToJob(result.rewritten, jd).score : null),
@@ -130,7 +164,11 @@ export default function RewritePanel({ resume, jd }: { resume: string; jd: strin
     <div className="rewrite">
       <div className="rewrite-head">
         <button className="btn btn-primary" onClick={rewrite} disabled={loading || noneLeft}>
-          {loading ? 'Rewriting… (5–20s)' : noneLeft ? 'Free rewrites used up' : `✨ Rewrite my resume for this job${remaining !== null ? ` — ${remaining} free left` : ''}`}
+          {loading
+            ? 'Rewriting… (5–20s)'
+            : noneLeft
+              ? 'Free rewrites used up'
+              : `✨ Rewrite my resume for this job${remaining !== null ? (remaining > 0 ? ` — ${remaining} free left` : ` — ${credits} credit${credits === 1 ? '' : 's'} left`) : ''}`}
         </button>
         <span className="rewrite-note">
           AI rewrites truthfully: it reuses your facts in the job's wording and flags requirements you can't support. Sends your resume + JD to our API (DeepSeek) — the free matcher above stays 100% local.
@@ -138,6 +176,20 @@ export default function RewritePanel({ resume, jd }: { resume: string; jd: strin
       </div>
 
       {error && <p className="warn rewrite-error">{error}</p>}
+
+      {packsOpen && (
+        <div className="pack-cta">
+          <button type="button" className="btn btn-primary" disabled={buying !== null} onClick={() => buy('pack5')}>
+            {buying === 'pack5' ? 'Opening checkout…' : '5 credits — $1.99'}
+          </button>
+          <button type="button" className="btn btn-primary" disabled={buying !== null} onClick={() => buy('pack30')}>
+            {buying === 'pack30' ? 'Opening checkout…' : '30 credits — $9 · best value'}
+          </button>
+          <span className="rewrite-note">
+            1 credit = 1 rewrite · never expires · secure checkout by Creem · <a href="/pricing">pricing details</a>
+          </span>
+        </div>
+      )}
 
       {result && (
         <div className="rewrite-result">

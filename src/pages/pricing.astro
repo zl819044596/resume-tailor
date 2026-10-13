@@ -1,0 +1,92 @@
+---
+import Base from '../layouts/Base.astro';
+import { BRAND } from '../config';
+---
+
+<Base
+  title={`Pricing — Free Matcher, Pay-Per-Pack AI Rewrites | ${BRAND}`}
+  description={`${BRAND} pricing: the keyword matcher and ATS score are free and unlimited. AI rewrites are free for your first 3, then buy credit packs — 5 credits for $1.99 or 30 credits for $9. One-time payment, no subscription.`}
+  path="/pricing"
+>
+  <section class="prose">
+    <span class="badge">Pricing</span>
+    <h1>Free where it counts. Pay only for AI rewrites.</h1>
+    <p class="lead">
+      The keyword matcher, ATS score, and missing-keyword report are free and unlimited — they run in your
+      browser and cost us nothing. The optional AI rewrite costs server money, so it comes with 3 free tries
+      and credit packs after that.
+    </p>
+
+    <div class="plans">
+      <div class="card plan">
+        <h3>Free</h3>
+        <p class="price">$0</p>
+        <ul>
+          <li>Unlimited keyword matching & ATS scores</li>
+          <li>Missing-keyword report, before/after scoring</li>
+          <li>3 free AI rewrites per account (3 on anonymous devices too)</li>
+          <li>No sign-up required to start</li>
+        </ul>
+        <a class="btn btn-ghost" href="/">Use the free matcher</a>
+      </div>
+      <div class="card plan">
+        <h3>Credit Pack <span class="pill">pay once</span></h3>
+        <p class="price">$1.99</p>
+        <ul>
+          <li><b>5 AI rewrite credits — $1.99</b></li>
+          <li>1 credit = 1 full AI rewrite of one resume for one job description</li>
+          <li>Credits never expire and are tied to your account</li>
+          <li>One-time purchase. No subscription, no auto-renew.</li>
+        </ul>
+        <a class="btn btn-primary" href="/#rewrite">Buy inside the app</a>
+      </div>
+      <div class="card plan">
+        <h3>Credit Pack <span class="pill">best value</span></h3>
+        <p class="price">$9</p>
+        <ul>
+          <li><b>30 AI rewrite credits — $9.00</b> (about $0.30 each, vs $0.40 in the small pack)</li>
+          <li>Same as the small pack: 1 credit = 1 rewrite, never expires</li>
+          <li>For a full job hunt: tailor one resume to dozens of postings</li>
+          <li>One-time purchase. No subscription, no auto-renew.</li>
+        </ul>
+        <a class="btn btn-primary" href="/#rewrite">Buy inside the app</a>
+      </div>
+    </div>
+
+    <h2>How buying works</h2>
+    <p>
+      Sign in with Google, use the matcher, and click <em>Rewrite my resume for this job</em>. When your 3
+      free rewrites are used up, the two credit packs appear right in the app — pick one and you're taken to a
+      secure checkout handled by <a href="https://www.creem.io/" rel="noopener">Creem</a>, our Merchant of
+      Record. Creem processes the payment, issues the invoice, and handles applicable sales tax / VAT. We
+      never see your card details.
+    </p>
+
+    <h2>What a credit gets you (and what it doesn't)</h2>
+    <p>
+      One credit produces one truthful rewrite: the AI rephrases your existing experience in the job's
+      wording, lists the changes, and honestly flags job requirements your resume can't support. It does not
+      invent credentials. Credits are consumed per rewrite request, whether or not you end up using the
+      result — so read the preview before you rewrite.
+    </p>
+
+    <h2>Refunds</h2>
+    <p>
+      If a purchase didn't work as described, email
+      <a href="mailto:support@tailorresume.dev">support@tailorresume.dev</a> within 14 days and we'll refund
+      unused credits in full. Used credits are non-refundable. See the
+      <a href="/terms">Terms of Service</a> for details.
+    </p>
+  </section>
+</Base>
+
+<style>
+  .plans { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); margin: 28px 0 8px; }
+  .plan { display: flex; flex-direction: column; gap: 12px; }
+  .plan ul { margin: 0; padding-left: 18px; color: var(--muted); font-size: .92rem; }
+  .plan li { margin: 4px 0; }
+  .price { font-size: 1.9rem; font-weight: 700; color: var(--text); margin: 0; letter-spacing: -.02em; }
+  .plan .btn { margin-top: auto; text-align: center; }
+  .pill { display: inline-block; font-size: .68rem; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--accent-soft); border: 1px solid var(--line-2); border-radius: 999px; padding: 2px 8px; margin-left: 6px; vertical-align: middle; }
+  @media (max-width: 760px) { .plans { grid-template-columns: 1fr; } }
+</style>

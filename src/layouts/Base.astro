@@ -55,9 +55,14 @@ const canon = new URL(Astro.url.pathname, Astro.site);
       <div class="wrap">
         <p>{TAGLINE}</p>
         <p class="foot-links">
-          <a href="/">{BRAND}</a> · <a href="/ats-resume-checker">ATS Resume Checker</a> · <a href="/tailor-resume-to-job-description">Tailor to a job description</a> · <a href="/privacy">Privacy</a>
+          <a href="/">Home</a> · <a href="/ats-resume-checker">ATS Resume Checker</a> · <a href="/tailor-resume-to-job-description">Tailor to a job description</a> · <a href="/pricing">Pricing</a>
         </p>
-        <p class="foot-note">© {new Date().getFullYear()} {BRAND}. Your resume never leaves your browser.</p>
+        <p class="foot-links">
+          <a href="/terms">Terms of Service</a> · <a href="/acceptable-use">Acceptable Use</a> · <a href="/privacy">Privacy</a>
+        </p>
+        <p class="foot-note">
+          Support: <a href="mailto:support@tailorresume.dev">support@tailorresume.dev</a> · © {new Date().getFullYear()} {BRAND}. Your resume never leaves your browser.
+        </p>
       </div>
     </footer>
   </body>

@@ -1,0 +1,82 @@
+---
+import Base from '../layouts/Base.astro';
+import { BRAND } from '../config';
+const UPDATED = 'October 12, 2026';
+---
+
+<Base
+  title={`Acceptable Use Policy | ${BRAND}`}
+  description={`What you may and may not do with ${BRAND}'s AI resume rewrite feature: honest use, prohibited misuse, and prohibited content including sexually explicit material.`}
+  path="/acceptable-use"
+>
+  <section class="prose">
+    <h1>Acceptable Use Policy</h1>
+    <p class="lead">Last updated: {UPDATED}</p>
+
+    <p>
+      This policy covers the AI rewrite feature (and every other part of {BRAND}). It is part of our
+      <a href="/terms">Terms of Service</a>. Breaking it can lead to refused service, quota or account
+      suspension, and — where required — reports to the relevant authorities.
+    </p>
+
+    <h2>What the AI rewrite is for</h2>
+    <p>
+      One thing only: helping <b>you</b> present <b>your own real experience</b> in the wording of a job
+      description you are genuinely considering. The tool rephrases your facts; it never invents new ones,
+      and you're not allowed to make it try.
+    </p>
+
+    <h2>Prohibited content</h2>
+    <ul>
+      <li>
+        <b>Sexually explicit or NSFW content.</b> Requesting that the AI rewrite generate, describe, or
+        promote sexually explicit, pornographic, or otherwise NSFW material is prohibited. The rewrite
+        feature is strictly for professional job-application documents.
+      </li>
+      <li>Content that is illegal in your jurisdiction or ours, or that infringes anyone's rights.</li>
+      <li>Hateful, harassing, discriminatory, or violent content.</li>
+      <li>Malware, phishing text, or content designed to deceive security systems.</li>
+      <li>
+        Other people's resumes or private data you don't have permission to use — including scraped or
+        purchased personal data.
+      </li>
+    </ul>
+
+    <h2>Prohibited uses</h2>
+    <ul>
+      <li>
+        <b>Fabricating qualifications.</b> Using the rewrite to invent degrees, employers, titles,
+        certifications, or experience you don't have. The tool flags job requirements your resume can't
+        support — treat those flags as stop signs, not suggestions.
+      </li>
+      <li>Impersonating another person or applying on someone's behalf without their consent.</li>
+      <li>
+        Automated abuse: bots, scrapers, mass automated requests, or any attempt to circumvent free-quota or
+        credit limits (including creating multiple accounts to re-earn free quota).
+      </li>
+      <li>Reverse-engineering, reselling, or white-labeling the service.</li>
+      <li>Using the service to build a competing dataset or to train machine-learning models.</li>
+      <li>Any use that violates the law of your jurisdiction, ours, or Creem's payment policies.</li>
+    </ul>
+
+    <h2>Fair-use limits</h2>
+    <p>
+      Credits and free rewrites are for a single person's genuine job hunt. Very high request rates,
+      anomalous usage patterns, or chargeback abuse may trigger automatic suspension while we take a look.
+    </p>
+
+    <h2>Enforcement</h2>
+    <p>
+      We may refuse a rewrite request, cap usage, suspend an account, or terminate service for violations.
+      If we terminate a paid account for these reasons, unused credits are refunded at our discretion where
+      the law doesn't say otherwise.
+    </p>
+
+    <h2>Reporting misuse</h2>
+    <p>
+      Found someone using {BRAND} in violation of this policy? Email
+      <a href="mailto:support@tailorresume.dev">support@tailorresume.dev</a> with details. We take fraud and
+      abuse reports seriously.
+    </p>
+  </section>
+</Base>
