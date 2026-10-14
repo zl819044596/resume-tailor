@@ -57,11 +57,11 @@ a:hover { text-decoration: underline; }
 .nav-links { display: flex; gap: 26px; font-size: .94rem; }
 .nav-links a { color: var(--muted); }
 .nav-links a:hover { color: var(--text); text-decoration: none; }
-/* 窄屏:导航不换行;隐藏中间链接(该页从 ATS 页相关链接与页脚可达);登录态只留 Log out(防溢出) */
+/* 窄屏:导航不换行;只留 ATS Checker + Pricing(隐藏 Tailor to a JD 与 Privacy,均可从页脚可达);登录态只留 Log out(防溢出) */
 @media (max-width: 560px) {
   .nav-links { gap: 12px; font-size: .85rem; }
   .nav-links a { white-space: nowrap; }
-  .nav-links a:nth-child(2) { display: none; }
+  .nav-links a:nth-child(2), .nav-links a:nth-child(4) { display: none; }
   .logo { font-size: 1rem; }
   .auth-chip { gap: 8px; }
   .auth-credits, .auth-email { display: none; }
