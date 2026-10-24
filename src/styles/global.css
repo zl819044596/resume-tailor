@@ -57,11 +57,11 @@ a:hover { text-decoration: underline; }
 .nav-links { display: flex; gap: 26px; font-size: .94rem; }
 .nav-links a { color: var(--muted); }
 .nav-links a:hover { color: var(--text); text-decoration: none; }
-/* 窄屏:导航不换行;只留 ATS Checker + Pricing(隐藏 Tailor to a JD 与 Privacy,均可从页脚可达);登录态只留 Log out(防溢出) */
+/* 窄屏:导航不换行;只留 ATS Checker + AI Detector(隐藏 Tailor to a JD / Pricing / Privacy,均可从页脚可达);登录态只留 Log out(防溢出) */
 @media (max-width: 560px) {
   .nav-links { gap: 12px; font-size: .85rem; }
   .nav-links a { white-space: nowrap; }
-  .nav-links a:nth-child(2), .nav-links a:nth-child(4) { display: none; }
+  .nav-links a:nth-child(2), .nav-links a:nth-child(4), .nav-links a:nth-child(5) { display: none; }
   .logo { font-size: 1rem; }
   .auth-chip { gap: 8px; }
   .auth-credits, .auth-email { display: none; }
@@ -95,7 +95,13 @@ a:hover { text-decoration: underline; }
 .card { background: var(--card); border: none; border-radius: 0; padding: 24px; }
 .card h3 { margin-top: 0; }
 .card p { color: var(--muted); font-size: .92rem; margin: 0; }
-@media (max-width: 760px) { .grid-3 { grid-template-columns: 1fr; } }
+.grid-2 {
+  display: grid; grid-template-columns: repeat(2, 1fr);
+  gap: 1px; background: var(--line);
+  border: 1px solid var(--line); border-radius: 8px; overflow: hidden;
+  margin-top: 18px;
+}
+@media (max-width: 760px) { .grid-3, .grid-2 { grid-template-columns: 1fr; } }
 
 /* tool */
 .tool { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 24px; margin: 38px auto 0; max-width: 940px; text-align: left; }
@@ -204,3 +210,7 @@ a:hover { text-decoration: underline; }
 }
 .pricing-buy { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; align-items: center; }
 .pricing-buy .warn { flex-basis: 100%; margin: 6px 0 0; }
+
+/* pricing 卡 CTA 推底:.pricing-buy 是 React 岛,scoped 样式够不到,必须全局层 */
+.plan .btn, .plan .pricing-buy { margin-top: auto; }
+.plan .pricing-buy .btn { margin-top: 0; }
