@@ -25,6 +25,8 @@ import { BRAND, TAGLINE } from '../config';
         history.replaceState(null, '', location.pathname);
       } else if (p.get('payment') === 'success') {
         if (typeof gtag === 'function') gtag('event', 'purchase_return', { method: 'creem' });
+        // 立 URL 会被清掉:留标记给水合后的 AuthNav 出到账提示
+        try { sessionStorage.setItem('rt:paid', '1'); } catch (e) {}
         history.replaceState(null, '', location.pathname);
       }
     })();
@@ -56,7 +58,7 @@ import { BRAND, TAGLINE } from '../config';
         see the <a href="/pricing">credit-pack pricing</a>.
       </p>
       <p class="sub" style="max-width:760px">
-        More free tools: <a href="/ats-resume-checker">ATS resume checker</a> · <a href="/tailor-resume-to-job-description">how to tailor a resume to a job description</a>
+        More free tools: <a href="/ats-resume-checker">ATS resume checker</a> · <a href="/ai-resume-detector">AI resume detector</a> · <a href="/tailor-resume-to-job-description">how to tailor a resume to a job description</a>
       </p>
     </div>
   </section>

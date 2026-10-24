@@ -1,0 +1,222 @@
+---
+import Base from '../layouts/Base.astro';
+import AiResumeDetector from '../components/AiResumeDetector';
+import { BRAND } from '../config';
+
+const faqs = [
+  {
+    q: 'Will recruiters reject my resume if AI wrote part of it?',
+    a: `Using AI to draft your resume is not automatically disqualifying — but recruiters increasingly skim for telltale ChatGPT phrasing ("spearheaded cross-functional synergy"), and some employers run applications through AI-detection filters the same way universities check essays. The risk isn't AI assistance; it's a resume that reads generic. Check your draft here, then anchor every claim in specifics only you could write.`,
+  },
+  {
+    q: 'How does this AI resume detector work?',
+    a: `It runs an open-source language model (a RoBERTa-based detector trained on human vs. ChatGPT text) directly in your browser. Each sentence gets an AI-probability score, combined into a weighted overall score shown as a heatmap over your text. The model itself is downloaded once and cached; your resume text is never uploaded anywhere.`,
+  },
+  {
+    q: 'Is my resume uploaded to a server?',
+    a: `No. Detection runs 100% on your device — you can disconnect from the internet after the model loads and it still works. Only the model files are fetched (once, then cached); your text never leaves your browser. The optional AI rewrite on the Tailor page is the only feature that sends text anywhere, and it is clearly labeled.`,
+  },
+  {
+    q: 'What AI score should I worry about?',
+    a: `Below 35% reads as human — ship it. 35–70% is mixed: usually a few generic bullets dragging the score up; rewrite those with concrete numbers, tools and outcomes. Above 70% likely reads as machine-generated to a skeptical recruiter — rewrite the highlighted sentences before applying. Sentence-level highlighting shows you exactly which ones.`,
+  },
+  {
+    q: 'Can I lower my AI score honestly?',
+    a: `Yes — and no tricks needed. Detectors flag generic, low-information text. Replace vague bullets ("responsible for improving processes") with specifics ("cut invoice processing from 6 days to 2 by automating X"). Concrete facts only you could write score as human because that's what the model associates with human writing. Our Tailor-to-JD tool rewrites exactly this way.`,
+  },
+  {
+    q: 'Are AI detectors accurate? Can they flag human writing?',
+    a: `All AI detectors — including commercial ones like GPTZero and Turnitin — produce false positives, and they are hardest on non-native English writers. Treat this score as a pre-flight check, not a verdict. If you wrote it yourself and it flags, rewrite the highlighted sentences to be more specific; don't panic, and never let a detector score alone change what's true.`,
+  },
+  {
+    q: 'Is it free? Is there a word limit?',
+    a: `Free, no sign-up, no scan limits. Paste up to 8,000 characters per check — about two pages of resume text. It runs in your browser, so there's no per-scan cost, which is why it can stay free.`,
+  },
+];
+---
+
+<Base
+  title={`AI Resume Detector — Does Your Resume Read as Human? | ${BRAND}`}
+  description={`Free AI resume detector: paste your resume and see a sentence-level AI-score heatmap before a recruiter does. Runs 100% in your browser — nothing is uploaded. Free, no sign-up.`}
+  path="/ai-resume-detector"
+  jsonLd={{
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  }}
+>
+  <section class="hero">
+    <div class="wrap">
+      <span class="badge">Free · In-browser · Zero uploads</span>
+      <h1>AI Resume Detector<br /><em>Check your resume before a recruiter does</em></h1>
+      <p class="sub">
+        Employers have started running applications through AI-detection filters, the same way they
+        scan for keywords. Paste your resume — or just its summary — and get a sentence-level
+        AI-score heatmap, computed entirely on your device.
+      </p>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <AiResumeDetector client:load />
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker">Why check</span>
+        <h2>The filter you didn't know you were passing</h2>
+      </div>
+      <div class="grid grid-3">
+        <div class="card">
+          <h3>Detectors moved upstream</h3>
+          <p>AI-detection tools market directly to recruiters and HR suites now. A resume that reads as unprompted ChatGPT lands in the same pile as an unkeyworded one — filtered before a human looks.</p>
+        </div>
+        <div class="card">
+          <h3>Generic is the real problem</h3>
+          <p>Detection models latch onto low-information text: vague verbs, listy nouns, zero specifics. That's also exactly what loses interviews. Fixing one fixes the other.</p>
+        </div>
+        <div class="card">
+          <h3>Privacy by design</h3>
+          <p>Your resume is the most sensitive document you paste anywhere. That's why this detector ships the model to your browser instead of shipping your resume to a server.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section alt">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker">Reading the result</span>
+        <h2>What the heatmap tells you</h2>
+      </div>
+      <div class="grid grid-3">
+        <div class="card">
+          <h3>Green — likely human</h3>
+          <p>Specific, information-dense sentences: named tools, numbers, outcomes. This is what human writing looks like to the model — because it usually is.</p>
+        </div>
+        <div class="card">
+          <h3>Amber — mixed signals</h3>
+          <p>Human skeleton, machine phrasing. Often bullets that started as a prompt. Rewrite with what actually happened: scope, action, measurable result.</p>
+        </div>
+        <div class="card">
+          <h3>Red — likely AI</h3>
+          <p>High-fluency, zero-content sentences. Rewrite these first — or replace them with something true that a language model couldn't have invented about you.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker">Next steps</span>
+        <h2>Fix the score where it matters</h2>
+      </div>
+      <div class="grid grid-2">
+        <div class="card">
+          <h3><a href="/tailor-resume-to-job-description">Tailor your resume to the job description →</a></h3>
+          <p>The honest fix for a machine-sounding resume is intent: match your experience to what this specific posting asks for. Free, in-browser keyword matching plus optional AI rewrite.</p>
+        </div>
+        <div class="card">
+          <h3><a href="/ats-resume-checker">Run the ATS keyword check →</a></h3>
+          <p>Detection is half the filter; keywords are the other half. See your match score and the exact missing keywords before you apply.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section alt">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker">FAQ</span>
+        <h2>AI resume detection, answered</h2>
+      </div>
+      <div class="faq-list">
+        {faqs.map((f) => (
+          <details class="faq-item">
+            <summary>{f.q}</summary>
+            <p>{f.a}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style is:global>
+  /* detector 样式:自 textverdict 移植并适配暖炭深色主题(2026-10-24 合并) */
+  .detector textarea {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--line-2);
+    border-radius: 8px;
+    color: var(--text);
+    font: inherit;
+    font-size: 15px;
+    line-height: 1.7;
+    padding: 16px 18px;
+    resize: vertical;
+  }
+  .detector textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(192, 122, 75, 0.15);
+  }
+  .detector textarea::placeholder { color: var(--muted); }
+  .detector-bar { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; gap: 12px; flex-wrap: wrap; }
+  .detector .count { font-size: 13px; color: var(--muted); }
+  .detect-btn {
+    background: var(--accent);
+    color: #1b1a18;
+    border: 0;
+    border-radius: 7px;
+    font: inherit;
+    font-weight: 700;
+    font-size: 15px;
+    padding: 11px 22px;
+    cursor: pointer;
+  }
+  .detect-btn:hover:enabled { background: var(--accent-soft); }
+  .detect-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+  .privacy-note { font-size: 13.5px; color: var(--muted); margin: 12px 0 0; }
+  .progress-box { margin-top: 16px; }
+  .progress-box p { font-size: 14px; color: var(--muted); margin: 0 0 8px; }
+  .progress { height: 6px; background: var(--line-2); border-radius: 4px; overflow: hidden; }
+  .progress > div { height: 100%; background: var(--accent); border-radius: 4px; transition: width 0.2s ease; }
+  .error-box {
+    margin-top: 16px;
+    border: 1px solid var(--low);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 14px;
+  }
+  .error-box p { margin: 0 0 4px; }
+  .error-box .muted { color: var(--muted); }
+  .result { margin-top: 26px; background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 26px 28px; }
+  .result-head { display: flex; align-items: center; gap: 28px; flex-wrap: wrap; }
+  .gauge { position: relative; width: 120px; height: 120px; flex: none; }
+  .gauge svg { transform: rotate(-90deg); }
+  .gauge .num { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .gauge .num b { font-size: 28px; letter-spacing: -0.03em; }
+  .gauge .num span { font-size: 10.5px; color: var(--muted); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; }
+  .verdict { font-size: 24px; font-weight: 700; letter-spacing: -0.02em; margin: 0 0 4px; }
+  .verdict.good { color: var(--good); }
+  .verdict.warn { color: var(--warn); }
+  .verdict.low { color: var(--low); }
+  .result-head .r-sub { color: var(--muted); font-size: 14px; margin: 0; }
+  .highlight-box { margin-top: 22px; background: var(--surface); border-radius: 8px; padding: 20px; font-size: 15px; line-height: 2.15; }
+  .highlight-box mark { border-radius: 6px; padding: 2px 4px; color: inherit; background: transparent; }
+  .legend { display: flex; gap: 18px; font-size: 13px; color: var(--muted); margin: 14px 0 0; }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .legend .dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+  .cta-box { margin-top: 20px; border: 1px solid var(--line-2); border-left: 3px solid var(--accent); border-radius: 8px; padding: 16px 18px; font-size: 14.5px; }
+  .cta-box p { margin: 0 0 8px; }
+  .cta-links { display: flex; flex-direction: column; gap: 6px; }
+  .disclaimer { margin-top: 18px; font-size: 13px; color: var(--muted); line-height: 1.65; }
+  .disclaimer p { margin: 0; }
+</style>

@@ -13,6 +13,7 @@ interface Me {
 export default function AuthNav() {
   const [google, setGoogle] = useState(false);
   const [me, setMe] = useState<Me | null>(null);
+  const [paid, setPaid] = useState(false);
 
   const refresh = useCallback(() => {
     fetch(`${API_BASE}/api/auth/me`, { credentials: 'include' })
@@ -22,6 +23,20 @@ export default function AuthNav() {
   }, []);
 
   useEffect(() => {
+    // 支付回流:首页内联脚本在解析期已清掉 ?payment=success 并留下 sessionStorage 标记,
+    // 这里读标记出到账提示(URL 此时必为空,不能读 URL)
+    try {
+      if (sessionStorage.getItem('rt:paid') === '1') {
+        sessionStorage.removeItem('rt:paid');
+        setPaid(true);
+        track('payment_success');
+        // webhook 加积分可能滞后几秒:补刷一次,横幅随 me 更新
+        setTimeout(refresh, 3000);
+        setTimeout(() => setPaid(false), 12000);
+      }
+    } catch {
+      /* sessionStorage 不可用(隐私模式等)则跳过提示 */
+    }
     fetch(`${API_BASE}/api/auth/config`)
       .then((r) => r.json() as Promise<{ google: boolean }>)
       .then((d) => setGoogle(Boolean(d.google)))
@@ -37,10 +52,24 @@ export default function AuthNav() {
     window.dispatchEvent(new Event('rt:auth'));
   }
 
-  if (!google) return null;
+  const paidToast = paid && (
+    <div className="paid-toast" role="status">
+      ✓ Payment received —{' '}
+      {me?.user
+        ? `${me.user.credits} credit${me.user.credits === 1 ? '' : 's'} ready to use.`
+        : 'credits have been added to your account.'}
+    </div>
+  );
+
+  // OAuth 未配置时登录 UI 隐藏,但支付回流提示不依赖 OAuth——单独放行
+  if (!google) {
+    return paid ? paidToast : null;
+  }
 
   if (me?.user) {
     return (
+      <>
+      {paidToast}
       <span className="auth-chip">
         <span className="auth-credits">
           {me.user.credits} credit{me.user.credits === 1 ? '' : 's'}
@@ -52,16 +81,20 @@ export default function AuthNav() {
           Log out
         </button>
       </span>
+      </>
     );
   }
 
   return (
-    <a
-      className="auth-link auth-signin"
-      href={`${API_BASE}/api/auth/google`}
-      onClick={() => track('login_click', { method: 'google' })}
-    >
-      Sign in
-    </a>
+    <>
+      {paidToast}
+      <a
+        className="auth-link auth-signin"
+        href={`${API_BASE}/api/auth/google`}
+        onClick={() => track('login_click', { method: 'google' })}
+      >
+        Sign in
+      </a>
+    </>
   );
 }
