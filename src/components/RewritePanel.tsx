@@ -101,9 +101,11 @@ export default function RewritePanel({ resume, jd }: { resume: string; jd: strin
         return;
       }
       setError(
-        data.error === 'payments_not_configured'
-          ? 'Payments are being set up — they will appear here shortly.'
-          : `Checkout failed (${data.error ?? res.status}). Please try again.`,
+        data.error === 'login_required'
+          ? 'Please sign in first (top right) — credits are tied to your account, so checkout needs you logged in.'
+          : data.error === 'payments_not_configured'
+            ? 'Payments are being set up — they will appear here shortly.'
+            : `Checkout failed (${data.error ?? res.status}). Please try again.`,
       );
     } catch {
       setError('Network error — please try again.');

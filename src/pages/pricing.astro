@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import BuyButtons from '../components/BuyButtons';
 import { BRAND } from '../config';
 ---
 
@@ -38,7 +39,7 @@ import { BRAND } from '../config';
           <li>Credits never expire and are tied to your account</li>
           <li>One-time purchase. No subscription, no auto-renew.</li>
         </ul>
-        <a class="btn btn-primary" href="/#rewrite">Buy inside the app</a>
+        <BuyButtons client:load product="pack5" />
       </div>
       <div class="card plan">
         <h3>Credit Pack <span class="pill">best value</span></h3>
@@ -49,7 +50,7 @@ import { BRAND } from '../config';
           <li>For a full job hunt: tailor one resume to dozens of postings</li>
           <li>One-time purchase. No subscription, no auto-renew.</li>
         </ul>
-        <a class="btn btn-primary" href="/#rewrite">Buy inside the app</a>
+        <BuyButtons client:load product="pack30" />
       </div>
     </div>
 

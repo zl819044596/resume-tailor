@@ -202,3 +202,5 @@ a:hover { text-decoration: underline; }
   color: var(--good); background: var(--bg); border: 1px solid var(--good);
   border-radius: 6px; box-shadow: 0 4px 16px rgba(0,0,0,.35);
 }
+.pricing-buy { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; align-items: center; }
+.pricing-buy .warn { flex-basis: 100%; margin: 6px 0 0; }
