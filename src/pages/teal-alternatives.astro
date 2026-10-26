@@ -1,0 +1,105 @@
+---
+import Base from '../layouts/Base.astro';
+import { BRAND } from '../config';
+
+const faqs = [
+  {
+    q: 'How much does Teal cost in 2026?',
+    a: `Teal has a free "Free Forever" plan and a paid Teal+ tier. As shown on Teal's own pricing page (archived copy retrieved October 16, 2026), Teal+ is listed at $13 per week ($1.85 a day), with longer plans shown at $29 and $79. Pricing can change, so always confirm on tealhq.com/pricing before you buy.`,
+  },
+  {
+    q: 'Is the Teal free plan enough?',
+    a: `The free plan covers the basics: resumes, job tracking, and templates. Where it stops, per Teal's pricing page: job-description keyword analysis is capped at the top 5 keywords (the full keyword list and Match Score are Teal+), and AI generation runs through limited credits on free rather than unlimited. If you tailor a resume per application — the habit that actually moves interviews — those are the two caps you'll feel first.`,
+  },
+  {
+    q: 'What is the best free alternative to Teal?',
+    a: `It depends on which Teal feature you actually use. For keyword matching and tailoring, look for a tool whose free tier is a real working tier, not a trial: check whether keyword analysis is capped (Teal's free plan stops at top-5 keywords) and whether you must sign up before you see any output. ${BRAND}'s ATS keyword matcher and job-description tailoring are free and unlimited with no sign-up — the matcher runs entirely in your browser.`,
+  },
+  {
+    q: 'What is a Teal alternative with no subscription?',
+    a: `${BRAND} works pay-as-you-go: the keyword matcher, ATS checker and AI resume detector are free and unlimited, and the AI rewrite uses one-time credit packs ($1.99 for 5 credits, $9 for 30; one rewrite = 1 credit). There is no weekly or monthly subscription to remember to cancel.`,
+  },
+  {
+    q: 'Is Teal worth it?',
+    a: `Honestly: sometimes. If you want an all-in-one job-search organizer and you'll genuinely use unlimited AI generations every day for a few weeks, Teal+ at $13/week can be worth it for a short sprint. If your search runs for months, do the math on weekly billing against longer plans first — and if all you need is per-application tailoring with a keyword gap list, a free tool plus pay-per-rewrite credits will cost you less.`,
+  },
+  {
+    q: 'Can I use Teal and TailorResume together?',
+    a: `Yes, and that's a common setup: track your applications and manage the search in one tool, and run the per-application tailoring — keyword gaps, ATS check, rewrite — in another. Nothing about using ${BRAND} locks you in or requires you to abandon whatever tracker you already like.`,
+  },
+];
+---
+
+<Base
+  title={`Teal Alternatives (2026): Honest Comparison — Free & Paid | ${BRAND}`}
+  description={`Comparing Teal's free plan and Teal+ ($13/week) against a pay-as-you-go alternative: free unlimited ATS keyword matching, no sign-up, and one-time AI rewrite credits instead of a subscription.`}
+  path="/teal-alternatives"
+  jsonLd={{
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  }}
+>
+  <section class="hero">
+    <div class="wrap">
+      <span class="badge">Independent comparison · Prices verified against Teal's own pricing page</span>
+      <h1>Teal alternatives:<br />an honest <em>2026</em> comparison</h1>
+      <p class="sub">Full disclosure: this page is written by {BRAND}, a competing resume platform. So instead of a listicle, you get the two questions that actually matter — where Teal's free plan stops, and when a pay-as-you-go workflow beats a weekly subscription. Including the cases where Teal is the better choice.</p>
+    </div>
+  </section>
+
+  <section class="prose">
+    <h2>What is Teal?</h2>
+    <p class="lead">Teal is an all-in-one job-search platform: an AI resume builder, a job application tracker, and job-description keyword matching, with a free tier and a paid "Teal+" tier.</p>
+    <p>It's a genuinely popular product — the job-tracker alone is a reason many people sign up. This page isn't here to trash it. It's here because most "Teal alternatives" articles are affiliate roundups that never tell you what the free plan actually caps, and that's exactly the information you need before choosing.</p>
+
+    <h2>What Teal's free plan includes — and where it stops</h2>
+    <p>Per Teal's own pricing page (archived copy retrieved October 16, 2026 — prices can change, so confirm on tealhq.com/pricing):</p>
+    <ul>
+      <li><strong>Included free:</strong> unlimited resumes, unlimited job tracking, 10 resume templates, and job-description keyword matching with the <em>top 5</em> keywords.</li>
+      <li><strong>Teal+ territory:</strong> the full keyword list with a Match Score, unlimited AI generations (summaries, bullets, cover letters), unlimited templates, and full design control.</li>
+      <li><strong>Teal+ pricing:</strong> $13 per week ($1.85 a day), with longer plans listed at $29 and $79.</li>
+    </ul>
+    <p>Two caps matter in practice. First, keyword analysis: top-5 is a taste, not a workflow — serious tailoring means seeing every requirement the posting repeats. Second, weekly billing: $13/week is built for short sprints. If your search lasts months, that cadence deserves a comparison against monthly or annual plans before you commit.</p>
+
+    <h2>Teal vs {BRAND}: the actual difference</h2>
+    <p>{BRAND} isn't a job-search organizer — it's a tailoring toolkit. The free tools do the per-application work Teal gates, and the AI rewrite is pay-per-use instead of a subscription:</p>
+    <table>
+      <thead>
+        <tr><th scope="col"></th><th scope="col">Teal free</th><th scope="col">Teal+</th><th scope="col">{BRAND}</th></tr>
+      </thead>
+      <tbody>
+        <tr><th scope="row">Price</th><td>$0</td><td>$13/week (longer plans: $29, $79)</td><td>$0 base · credits from $1.99 (5) / $9 (30)</td></tr>
+        <tr><th scope="row">JD keyword matching</th><td>Top 5 keywords</td><td>Unlimited + Match Score</td><td>Free & unlimited, no sign-up</td></tr>
+        <tr><th scope="row">AI rewrite</th><td>Limited credits</td><td>Unlimited generations</td><td>1 credit per rewrite (≈$0.30 at the 30-pack)</td></tr>
+        <tr><th scope="row">Billing model</th><td>—</td><td>Subscription (weekly)</td><td>One-time credit packs, nothing to cancel</td></tr>
+        <tr><th scope="row">Privacy</th><td>Cloud account</td><td>Cloud account</td><td>Matcher runs in your browser — resume never uploaded</td></tr>
+        <tr><th scope="row">Best for</th><td>Trying the workflow</td><td>All-in-one search + heavy daily AI use</td><td>Per-application tailoring without a subscription</td></tr>
+      </tbody>
+    </table>
+
+    <h2>When Teal is the better choice</h2>
+    <p>If you want one place to organize an entire search — bookmarks, statuses, notes, interviews — and you'll lean on AI generation daily for a few intensive weeks, Teal+ is a fair price for that bundle. Pay-as-you-go tools win on cost for sporadic use; they don't replace a job tracker. Choose based on which job you're actually hiring the tool to do.</p>
+
+    <h2>Try the free side of the comparison right now</h2>
+    <p>You can test the {BRAND} workflow in about two minutes, without an account: paste your resume and a job description into the <a href="/tailor-resume-to-job-description">free job-description tailoring tool</a> for a match score and ranked keyword gaps, then run the result through the <a href="/ats-resume-checker">free ATS resume checker</a>. If the output helps, the AI rewrite is a $1.99 decision — not a subscription.</p>
+
+    <h2>FAQ</h2>
+    <div class="faq">
+      {faqs.map((f) => (
+        <details>
+          <summary>{f.q}</summary>
+          <p>{f.a}</p>
+        </details>
+      ))}
+    </div>
+
+    <p style="color: var(--muted); font-size: .9rem; margin-top: 28px;">
+      Related: <a href="/tailor-resume-to-job-description">tailor resume to job description — free keyword tool</a> · <a href="/ats-resume-checker">free ATS resume checker</a> · <a href="/ai-resume-detector">AI resume detector</a>
+    </p>
+  </section>
+</Base>
